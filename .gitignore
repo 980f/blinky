@@ -1,0 +1,12 @@
+*Debug/
+build*/
+*~
+*.so
+*.so.*
+*.bak
+*.bak.*
+
+#sym links
+cortexm
+ezcpp
+nvicTable.inc
