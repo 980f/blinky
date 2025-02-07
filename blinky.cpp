@@ -5,9 +5,9 @@
 //#include "nvic.h"
 #include "softpwm.h"
 
-//shared ~millisecond services:
+//shared ~millisecond services:  (probably should make the next pair of lines their own cpp file, to add to your build.
 #include "msservice.h"
-
+RegisterPolledTimerWithSysTick
 
 PolledSoftPWM ledToggle(750,250); 
 RegisterTimer(ledToggle);   //a polled timer, a macro for 'declare and register' could be made but it would have to be variadic to allow constructor args.
@@ -20,12 +20,14 @@ Bluepill board;
 
 void setup() {
   board.led=0;
+  ledToggle.trigger(1);//this calls the 'onDone' as if the given phase just completed. In this instance the low phase count will begin.
 }
 
 void loop() {
   board.led=!ledToggle;
 }
 
+//// below here is the equivalent of what Arduino build adds to your sketch:
 int main(void) {
 
   startPeriodicTimer(1000); //shoot for millisecond resolution
