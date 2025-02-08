@@ -62,7 +62,7 @@
       debug_initial_breakpoint_set_option="Only With No Breakpoints Set"
       debug_register_definition_file="$(TargetsDir)/STM32/STM32F103_Peripherals.xml"
       gcc_c_language_standard="gnu11"
-      gcc_cplusplus_language_standard="gnu++17"
+      gcc_cplusplus_language_standard="gnu++23"
       gcc_entry_point="cstartup"
       gcc_signed_char="No"
       gcc_thread_safe_statics="No"
