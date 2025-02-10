@@ -12,7 +12,7 @@ RegisterPolledTimerWithSysTick;
 
 class WaveFormer : public SharedTimer {
 protected:
-  OutputPin &pin;
+  const OutputPin &pin;
   unsigned *pattern;
   unsigned phase;
   public:
@@ -26,7 +26,7 @@ protected:
     pin=phase&1;
     restart(delay - 1);//# the sharedtimer stuff adds a 1 for good luck, we don't need no stinking luck. //todo: guard against a zero input
   }
-  WaveFormer(OutputPin &ref,unsigned pattern[]):pin(ref),pattern(pattern){}
+  WaveFormer(const OutputPin &ref,unsigned pattern[]):pin(ref),pattern(pattern){}
   void setup(){
     phase=0;
     restart(*pattern-1);
@@ -40,16 +40,92 @@ unsigned patternMemory[]={750,250,100,800,0};
 unsigned COA=0;
 MakeTimer(WaveFormer, ledToggler, board.led, patternMemory); 
 
+//Arduino uses 16 or 64 for the serial port buffer size.
+#include "serialport.h"
+class EchoSerial: public SerialPort {
+ /** performance tuned Fifo. Fails after 2^32-2 bytes received. */
+ class Fifo {
+   //forcing power of two
+   char buffer[1<<6];
+   const unsigned bufSize=sizeof(buffer);
+   unsigned getter=0;
+   unsigned putter=0;
+
+   public:
+   unsigned overflows=0;
+   
+   public:
+   unsigned available() const {
+     return putter-getter;
+   }
+
+   unsigned get(){
+     if(putter>getter){
+       return buffer[bufSize&getter++];
+     }
+     return ~0;
+   }
+
+   void put(unsigned incoming){
+     if(putter<getter+bufSize){
+       buffer[bufSize&putter++]=incoming;
+     } else {
+       ++overflows;
+     }
+   }
+ };
+
+ Fifo instream;
+
+ public:
+ constexpr EchoSerial():SerialPort(1){ } 
+
+ void begin(unsigned baudrate){
+  //must AF the serial pins:
+//serial 1: 
+//tx:PA9
+  Pin TX({PA,9});//defaults are sufficient for tx output
+  TX.FN();//defaults suffice 
+  InputPin RX({PA,10});//default is analog, The F103 doesn't need any altfunction games on altfun inputs.
+  init(SerialConfiguration(baudrate),false);
+ }
+ 
+  /** overiders; @return ~0 for nothing more to send, else return the next char to be sent. 
+   * this gets called from an ISR when the uart xmitter is writable.
+   * It will get called when you call beTransmitting(true);
+   */
+  unsigned nextChar(){
+    return instream.get();
+  }
+   /** overriders: this is called from an ISR. Negative values are error events, 0 or positive are a received datum., incoming glitches produce 0x1FF, which is noted as an error rather than a character, which means that 9 bit operation is not really possible on these chips, where the uart seems to glitch even in quiet systems. */
+  void onReception(int charOrError){
+    if(charOrError<0){
+      //an error has occurred;
+      ++instream.overflows;
+    } else {
+      instream.put(charOrError);
+    }
+  
+  };
+
+};
+
+EchoSerial Serial;
 
 
 void setup() {
-  board.led=0;
+  Serial.begin(115200);
+  board.led = 0;
   ledToggler.setup();
 }
 
 void loop() {
-  //all activity is in ISR's.
+  //all timed activity is in ISR's.
+  //if(auto readsome=Serial.instream.available()){
+  //  auto discard=Serial.instream.get();
+  //}
 }
+
 //Sketch End
 //////////////////////////////////////////////////////////////////////////
 //// below here is the equivalent of what Arduino build adds to your sketch:

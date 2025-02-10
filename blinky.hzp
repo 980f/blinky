@@ -127,13 +127,17 @@
       <file file_name="ezcpp/sharedtimer.cpp" />
     </folder>
     <folder Name="stm32">
-      <file file_name="cortexm/stm32/afio.cpp" />
+      <file file_name="cortexm/stm32/afio.cpp">
+        <configuration Name="THUMB Debug" build_exclude_from_build="Yes" />
+      </file>
       <file file_name="cortexm/stm32/bluepill.cpp" />
       <file file_name="cortexm/stm32/clocks.cpp" />
-      <file file_name="cortexm/stm32/exti.cpp" />
+      <file file_name="cortexm/stm32/exti.cpp">
+        <configuration Name="THUMB Debug" build_exclude_from_build="Yes" />
+      </file>
       <file file_name="cortexm/stm32/gpio.cpp" />
+      <file file_name="cortexm/stm32/serialport.cpp" />
       <file file_name="cortexm/stm32/stm32.cpp" />
-      <file file_name="cortexm/stm32/syscfg.cpp" />
       <file file_name="cortexm/stm32/uart.cpp" />
     </folder>
     <file file_name="blinky.cpp" />
