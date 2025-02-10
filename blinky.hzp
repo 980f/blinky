@@ -62,8 +62,10 @@
       debug_initial_breakpoint_set_option="Only With No Breakpoints Set"
       debug_register_definition_file="$(TargetsDir)/STM32/STM32F103_Peripherals.xml"
       gcc_c_language_standard="gnu11"
-      gcc_cplusplus_language_standard="gnu++23"
+      gcc_cplusplus_language_standard="gnu++20"
+      gcc_debugging_level="Level 3"
       gcc_entry_point="cstartup"
+      gcc_optimization_level="Optimize For More Size"
       gcc_signed_char="No"
       gcc_thread_safe_statics="No"
       gcc_use_cxa_at_exit="No"
@@ -104,7 +106,6 @@
         <configuration Name="THUMB Debug" build_exclude_from_build="Yes" />
       </file>
       <file file_name="cortexm/clockstarter.cpp" />
-      <file file_name="cortexm/core-atomic.cpp" />
       <file file_name="cortexm/core_cmfunc.cpp">
         <configuration Name="Common" gcc_optimization_level="Level 3" />
       </file>
@@ -118,22 +119,18 @@
       </file>
       <file file_name="cortexm/nvic.cpp" />
       <file file_name="cortexm/systick.cpp" />
-      <file file_name="cortexm/wtf.cpp" />
     </folder>
     <folder Name="ezcpp">
       <file file_name="ezcpp/quadraturecounter.cpp">
         <configuration Name="THUMB Debug" build_exclude_from_build="Yes" />
       </file>
       <file file_name="ezcpp/sharedtimer.cpp" />
-      <file file_name="ezcpp/softpwm.cpp" />
-      <file file_name="ezcpp/stopwatch.cpp" />
     </folder>
     <folder Name="stm32">
       <file file_name="cortexm/stm32/afio.cpp" />
       <file file_name="cortexm/stm32/bluepill.cpp" />
       <file file_name="cortexm/stm32/clocks.cpp" />
       <file file_name="cortexm/stm32/exti.cpp" />
-      <file file_name="cortexm/stm32/flash.cpp" />
       <file file_name="cortexm/stm32/gpio.cpp" />
       <file file_name="cortexm/stm32/stm32.cpp" />
       <file file_name="cortexm/stm32/syscfg.cpp" />
