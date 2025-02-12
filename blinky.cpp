@@ -34,8 +34,14 @@ protected:
 } ;
 
 
+#if DEVICE == 103
 #include "bluepill.h"  
 Bluepill board;
+#elif DEVICE==411
+#include "blackpill.h"
+Blackpill board;
+#endif
+
 unsigned patternMemory[]={750,250,100,800,0};
 unsigned COA=0;
 MakeTimer(WaveFormer, ledToggler, board.led, patternMemory); 
@@ -80,13 +86,23 @@ class EchoSerial: public SerialPort {
  public:
  constexpr EchoSerial():SerialPort(1){ } 
 
+
+#if DEVICE==103
+#define UART_FNARGS
+#else
+//not yet clear how to systematically declare symbold for AF values.
+#define UART_FNARGS 7
+#endif
+
  void begin(unsigned baudrate){
   //must AF the serial pins:
 //serial 1: 
 //tx:PA9
   Pin TX({PA,9});//defaults are sufficient for tx output
-  TX.FN();//defaults suffice 
+
+  TX.FN(UART_FNARGS);
   InputPin RX({PA,10});//default is analog, The F103 doesn't need any altfunction games on altfun inputs.
+
   init(SerialConfiguration(baudrate),false);
  }
  

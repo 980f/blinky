@@ -140,7 +140,100 @@
       <file file_name="cortexm/stm32/stm32.cpp" />
       <file file_name="cortexm/stm32/uart.cpp" />
     </folder>
+    <file file_name="blinky-blue.ld" />
     <file file_name="blinky.cpp" />
-    <file file_name="blinky.ld" />
+  </project>
+  <project Name="blinky-black">
+    <configuration
+      CMSIS_CORE="Yes"
+      Name="Common"
+      Placement="Flash"
+      Target="STM32F411CE"
+      arm_architecture="v7EM"
+      arm_core_type="Cortex-M4"
+      arm_fp_abi="Soft"
+      arm_fpu_type="FPv4-SP-D16"
+      arm_linker_heap_size="0"
+      arm_linker_jtag_pad_pre_dr="1"
+      arm_linker_jtag_pad_pre_ir="5"
+      arm_linker_process_stack_size="0"
+      arm_linker_stack_size="0"
+      arm_simulator_memory_simulation_filename="$(TargetsDir)/STM32/STM32SimulatorMemory$(HostDLL)"
+      arm_simulator_memory_simulation_parameter="STM32F411CE;0x80000;0x20000"
+      arm_target_loader_applicable_loaders="Flash"
+      arm_target_loader_default_loader="Flash"
+      arm_target_trace_interface_type="None"
+      arm_use_builtins="Yes"
+      c_files_are_cpp="Yes"
+      c_preprocessor_definitions="useSTM32;DEVICE=411;EXT_MHz=12;__CORTEX_M=4;ezOptimizeIsrs"
+      c_user_include_directories=".;cortexm;ezcpp;cortexm/stm32;$(TargetsDir)/STM32/include"
+      c_user_include_directories_cpp_only=".;cortexm;ezcpp;cortexm/stm32"
+      debug_initial_breakpoint_set_option="Only With No Breakpoints Set"
+      debug_register_definition_file="$(TargetsDir)/STM32/STM32F411_Peripherals.xml"
+      gcc_entry_point="cstartup"
+      gcc_optimization_level="Optimize For More Size"
+      linker_memory_map_file="$(TargetsDir)/STM32/STM32F411CE_MemoryMap.xml"
+      linker_printf_fmt_level="int"
+      linker_printf_fp_enabled="No"
+      linker_section_placement_file="$(StudioDir)/targets/Cortex_M/flash_placement.xml"
+      macros=""
+      project_directory=""
+      project_type="Executable"
+      property_groups_file_path="$(TargetsDir)/STM32/propertyGroups.xml"
+      target_get_partname_script="GetPartName()"
+      target_match_partname_script="MatchPartName(&quot;$(Target)&quot;)"
+      target_script_file="$(TargetsDir)/STM32/STM32_Target.js"
+      target_trace_initialize_script="EnableTrace(&quot;$(TraceInterfaceType)&quot;)" />
+    <configuration
+      Name="Flash"
+      arm_target_flash_loader_file_path="$(LOADER:$(TargetsDir)/STM32/Release/STM32F2xx_Loader_rpc.elf)"
+      arm_target_loader_can_erase_all="Yes"
+      arm_target_loader_can_lock_all="No"
+      arm_target_loader_can_lock_range="No"
+      arm_target_loader_can_unlock_all="No"
+      arm_target_loader_can_unlock_range="No"
+      target_reset_script="FLASHReset()" />
+    <configuration Name="RAM" target_reset_script="Reset()" />
+    <folder Name="cortexm">
+      <file file_name="cortexm/bitbanding.cpp">
+        <configuration Name="THUMB Debug" build_exclude_from_build="Yes" />
+      </file>
+      <file file_name="cortexm/clockstarter.cpp" />
+      <file file_name="cortexm/core_cmfunc.cpp">
+        <configuration Name="Common" gcc_optimization_level="Level 3" />
+      </file>
+      <file file_name="cortexm/cortex-m3.cpp" />
+      <file file_name="cortexm/cstartup.cpp">
+        <configuration
+          Name="Common"
+          arm_math_errno="None"
+          gcc_debugging_level="None"
+          gcc_optimization_level="None" />
+      </file>
+      <file file_name="cortexm/nvic.cpp" />
+      <file file_name="cortexm/systick.cpp" />
+    </folder>
+    <folder Name="ezcpp">
+      <file file_name="ezcpp/quadraturecounter.cpp">
+        <configuration Name="THUMB Debug" build_exclude_from_build="Yes" />
+      </file>
+      <file file_name="ezcpp/sharedtimer.cpp" />
+    </folder>
+    <folder Name="stm32">
+      <file file_name="cortexm/stm32/afio.cpp">
+        <configuration Name="THUMB Debug" build_exclude_from_build="Yes" />
+      </file>
+      <file file_name="cortexm/stm32/blackpill.cpp" />
+      <file file_name="cortexm/stm32/clocks.cpp" />
+      <file file_name="cortexm/stm32/exti.cpp">
+        <configuration Name="THUMB Debug" build_exclude_from_build="Yes" />
+      </file>
+      <file file_name="cortexm/stm32/gpio.cpp" />
+      <file file_name="cortexm/stm32/serialport.cpp" />
+      <file file_name="cortexm/stm32/stm32.cpp" />
+      <file file_name="cortexm/stm32/uart.cpp" />
+    </folder>
+    <file file_name="blinky-black.ld" />
+    <file file_name="blinky.cpp" />
   </project>
 </solution>
