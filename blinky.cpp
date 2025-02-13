@@ -10,6 +10,8 @@ RegisterPolledTimerWithSysTick;
 #include "sharedtimer.h"
 #include "gpio.h"
 
+
+/** Demo quality class for generating something beyond a simple squarish wave. A real implementation will contain and enforce a valid range for the phase member. */
 class WaveFormer : public SharedTimer {
 protected:
   const OutputPin &pin;
@@ -27,11 +29,12 @@ protected:
     restart(delay - 1);//# the sharedtimer stuff adds a 1 for good luck, we don't need no stinking luck. //todo: guard against a zero input
   }
   WaveFormer(const OutputPin &ref,unsigned pattern[]):pin(ref),pattern(pattern){}
-  void setup(){
-    phase=0;
-    restart(*pattern-1);
+  /** @param fromPhase can be ~0 to start at end of cycle. NB: it is not checked for validity and if invalid the first delay could be 2^32 milliseconds. */
+  void begin(unsigned fromPhase=~0){
+    phase=fromPhase;
+    onDone();
   }
-} ;
+};
 
 
 #if DEVICE == 103
@@ -132,7 +135,7 @@ EchoSerial Serial;
 void setup() {
   Serial.begin(115200);
   board.led = 0;
-  ledToggler.setup();
+  ledToggler.begin();
 }
 
 void loop() {
