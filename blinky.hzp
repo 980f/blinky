@@ -136,6 +136,7 @@
         <configuration Name="THUMB Debug" build_exclude_from_build="Yes" />
       </file>
       <file file_name="cortexm/stm32/gpio.cpp" />
+      <file file_name="cortexm/stm32/pinconfigurator.cpp" />
       <file file_name="cortexm/stm32/serialport.cpp" />
       <file file_name="cortexm/stm32/stm32.cpp" />
       <file file_name="cortexm/stm32/uart.cpp" />

@@ -2,6 +2,8 @@
  */
 
 //shared millisecond services:  (probably should make the next pair of lines their own cpp file, to add to your build.
+#include "pinconfigurator.h"
+
 #include "msservice.h"
 RegisterPolledTimerWithSysTick;
 //above is like Arduino.h, will add more to it as we emulate the "always present" parts of Arduino, such as a default Serial.
@@ -14,8 +16,8 @@ RegisterPolledTimerWithSysTick;
 /** Demo quality class for generating something beyond a simple squarish wave. A real implementation will contain and enforce a valid range for the phase member. */
 class WaveFormer : public SharedTimer {
 protected:
-  const OutputPin &pin;
-  unsigned *pattern;
+  const Pin &pin;
+  Ticks *pattern;
   unsigned phase;
   public:
     /** we override the 'count complete' event and switch to the other interval time value */
@@ -28,7 +30,7 @@ protected:
     pin=phase&1;
     restart(delay - 1);//# the sharedtimer stuff adds a 1 for good luck, we don't need no stinking luck. //todo: guard against a zero input
   }
-  WaveFormer(const OutputPin &ref,unsigned pattern[]):pin(ref),pattern(pattern){}
+  WaveFormer(const Pin &ref,Ticks pattern[]):pin(ref),pattern(pattern){}
   /** @param fromPhase can be ~0 to start at end of cycle. NB: it is not checked for validity and if invalid the first delay could be 2^32 milliseconds. */
   void begin(unsigned fromPhase=~0){
     phase=fromPhase;
@@ -45,7 +47,8 @@ Bluepill board;
 Blackpill board;
 #endif
 
-unsigned patternMemory[]={750,250,100,800,0};
+
+Ticks patternMemory[]={750,250,100,800,0};
 unsigned COA=0;
 MakeTimer(WaveFormer, ledToggler, board.led, patternMemory); 
 
@@ -90,24 +93,15 @@ class EchoSerial: public SerialPort {
  constexpr EchoSerial():SerialPort(1){ } 
 
 
-#if DEVICE==103
-#define UART_FNARGS
-#else
-//not yet clear how to systematically declare symbold for AF values.
-#define UART_FNARGS 7
+  void begin(unsigned baudrate){
+#if ! PIN_CONFIGURATOR
+
+    Pin TX({PA,9});//defaults are sufficient for tx output
+    TX.FN(UART_FNARGS);
+    InputPin RX({PA,10});//default is analog, The F103 doesn't need any altfunction games on altfun inputs.
 #endif
-
- void begin(unsigned baudrate){
-  //must AF the serial pins:
-//serial 1: 
-//tx:PA9
-  Pin TX({PA,9});//defaults are sufficient for tx output
-
-  TX.FN(UART_FNARGS);
-  InputPin RX({PA,10});//default is analog, The F103 doesn't need any altfunction games on altfun inputs.
-
-  init(SerialConfiguration(baudrate),false);
- }
+    init(SerialConfiguration(baudrate),false);
+  }
  
   /** overiders; @return ~0 for nothing more to send, else return the next char to be sent. 
    * this gets called from an ISR when the uart xmitter is writable.
@@ -124,13 +118,13 @@ class EchoSerial: public SerialPort {
     } else {
       instream.put(charOrError);
     }
-  
   };
-
 };
 
 EchoSerial Serial;
 
+FUNCTION_OUT(A,9,PinDeclaration::Uart1r2rSSP3,true,PinDeclaration::slow,false);
+FUNCTION_INPUT(A,10,PinDeclaration::Uart1r2rSSP3,true,PinDeclaration::Up);
 
 void setup() {
   Serial.begin(115200);
@@ -163,4 +157,3 @@ int main(void) {
 #pragma ide diagnostic ignored "UnreachableCode"
   return 0;
 }
-
